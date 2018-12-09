@@ -6,7 +6,7 @@
 if [ "$1" == "-h" -o "$1" == "--help" ]; then
   cat <<USAGE
 usage:
-demoinit [DIR]        Creates a minimal Makefile and demosetup cover in the
+demoinit [DIR]        Creates a minimal Makefile and demonow cover in the
                       current directory for presenting with MakeDemo.  DIR will
                       default to the path demoinit was run from
 demoinit [-h|--help]  Print this message and exit
@@ -32,38 +32,37 @@ else
   echo "Makefile exists, skipping"
 fi
 
-if [ ! -e "./demosetup" ]; then
-  # echo "Create demosetup here"
-  "$MakeDemoDir/getchunk" "$MakeDemoDir/demoinit" demosetup_cover | sed -e "s:MAKEDEMODIR:$MakeDemoDir:g" > ./demosetup
-  chmod a+x ./demosetup
-  echo "Created demosetup cover, run with 'source ./demosetup'"
+if [ ! -e "./demonow" ]; then
+  "$MakeDemoDir/getchunk" "$MakeDemoDir/demoinit" demonow_cover | sed -e "s:MAKEDEMODIR:$MakeDemoDir:g" > ./demonow
+  chmod a+x ./demonow
+  echo "Created demonow cover, run with 'source ./demonow'"
 else
-  echo "demosetup exists, skipping"
+  echo "demonow exists, skipping"
 fi
 
 # Force sequence file to update
 export MakeDemoDir
 touch -t "200001010000" "sequence.tmp.mk"
-make sequence | grep "Refreshed"
+make sequence | grep "Refreshed"  # HACK: quiet spurious output
 
-exit 0  # Must exit explicitly to avoid falling through to the demosetup template
+exit 0  # Must exit explicitly to avoid falling through to the demonow template
 
-### demosetup_cover
+### demonow_cover
 #!/bin/bash
 
-# Set up aliases and such for doing a presentation with MakeDemo using the main demosetup script
+# Set up aliases and such for doing a presentation with MakeDemo using the main demonow script
 
-RunAs=`echo "$0" | sed -nE 's/(.*)(demosetup)$/\2/p'`
+RunAs=`echo "$0" | sed -nE 's/(.*)(demonow)$/\2/p'`
 
 if [ "$1" == "-h" -o "$1" == "--help" ]; then
   cat <<USAGE
 usage:
-source ./demosetup              Sources MakeDemo's demosetup with a
-                                preconfigured directory. Must be sourced for
-                                the setup to stick
-       ./demosetup [-h|--help]  Print this message and exit
+source ./demonow              Sources MakeDemo's demonow with a preconfigured
+                              directory. Must be sourced for the setup to stick
+source ./demonow -c|--clear   Clears the MakeDemoDir env variable and returns
+       ./demonow [-h|--help]  Print this message and exit
 USAGE
-  if [ "$RunAs" == "demosetup" ]; then
+  if [ "$RunAs" == "demonow" ]; then
     exit 0  # Exit if run as itself
   else
     unset RunAs
@@ -71,11 +70,16 @@ USAGE
   fi
 fi
 
-if [ "$RunAs" == "demosetup" ]; then
+if [ "$RunAs" == "demonow" ]; then
   echo "Must be run with 'source' for the setup to stick"
   exit 1  # Not useful when run as itself
 fi
 unset RunAs
 
-source "MAKEDEMODIR/demosetup" "MAKEDEMODIR"
+if [ "$1" == "-c" -o "$1" == "--clear" ]; then  # FIXME: Completely cleaning up again is a non-goal, so maybe better not have the option at all?
+  source "MAKEDEMODIR/demonow" -c
+  return
+fi
+
+source "MAKEDEMODIR/demonow" "MAKEDEMODIR"
 ###
