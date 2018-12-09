@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Set up aliases and such for doing a presentation with MakeDemo
+# Copyright (c) 2018 Benjamin Holt -- MIT License
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  cat <<USAGE
+usage:
+demoinit [DIR]        Creates a minimal Makefile and demosetup cover in the
+                      current directory for presenting with MakeDemo.  DIR will
+                      default to the path demoinit was run from
+demoinit [-h|--help]  Print this message and exit
+USAGE
+  exit 0
+fi
+
+RunFrom=`echo "$0" | sed -nE 's/(.*)(demoinit)$/\1/p'`
+
+MakeDemoDir="${1:-$RunFrom}"
+
+if [ -z "MakeDemoDir" ]; then
+  echo "Please specify a MakeDemo directory; see --help for more info"
+  exit 1
+fi
+
+echo "Configuring MakeDemo at: $MakeDemoDir"
+
+if [ ! -e "./Makefile" ]; then
+  cp "$MakeDemoDir/Makefile.example" ./Makefile
+  echo "Copied example Makefile"
+else
+  echo "Makefile exists, skipping"
+fi
+
+if [ ! -e "./demosetup" ]; then
+  # echo "Create demosetup here"
+  "$MakeDemoDir/getchunk" "$MakeDemoDir/demoinit" demosetup_cover | sed -e "s:MAKEDEMODIR:$MakeDemoDir:g" > ./demosetup
+  chmod a+x ./demosetup
+  echo "Created demosetup cover, run with 'source ./demosetup'"
+else
+  echo "demosetup exists, skipping"
+fi
+
+# Force sequence file to update
+export MakeDemoDir
+touch -t "200001010000" "sequence.tmp.mk"
+make sequence | grep "Refreshed"
+
+exit 0  # Must exit explicitly to avoid falling through to the demosetup template
+
+### demosetup_cover
+#!/bin/bash
+
+# Set up aliases and such for doing a presentation with MakeDemo using the main demosetup script
+
+RunAs=`echo "$0" | sed -nE 's/(.*)(demosetup)$/\2/p'`
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  cat <<USAGE
+usage:
+source ./demosetup              Sources MakeDemo's demosetup with a
+                                preconfigured directory. Must be sourced for
+                                the setup to stick
+       ./demosetup [-h|--help]  Print this message and exit
+USAGE
+  if [ "$RunAs" == "demosetup" ]; then
+    exit 0  # Exit if run as itself
+  else
+    unset RunAs
+    return  # Return if run indirectly (ie sourced)
+  fi
+fi
+
+if [ "$RunAs" == "demosetup" ]; then
+  echo "Must be run with 'source' for the setup to stick"
+  exit 1  # Not useful when run as itself
+fi
+unset RunAs
+
+source "MAKEDEMODIR/demosetup" "MAKEDEMODIR"
+###
