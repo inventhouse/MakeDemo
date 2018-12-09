@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Tab-complete make targets that are documented with double-hash comments
+# Copyright (c) 2018 Benjamin Holt -- MIT License
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  cat <<USAGE
+usage:
+compmake _ [MATCH]    Searches Makefile for targets with ## doc comments,
+                      optionally filtering by MATCH, suitable for bash tab-
+                      completion with: complete -C compmake make
+compmake -h|--help    Print this message and exit
+USAGE
+  exit 0
+fi
+
+Filter=`echo "${2:-.*}" | sed -e 's/\\\\/\\\\\\\\/g'`
+# TODO: Env var or other control for comment prefix or option to complete any target
+egrep -o '^(\w(\w|[\\ .-])*:[^#]*\s+)## ' Makefile | cut -d ':' -f 1 | grep "$Filter"
+
+###

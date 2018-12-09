@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Set up aliases and such for doing a presentation with MakeDemo
+# Copyright (c) 2018 Benjamin Holt -- MIT License
+
+if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ]; then
+  cat <<USAGE
+usage:
+source demosetup DIR          Set env vars and aliases based on DIR for
+                              presenting with MakeDemo  Must be sourced for the
+                              setup to stick
+source demosetup -c|--clear   Clears the MakeDemoDir env variable and returns
+       demosetup [-h|--help]  Print this message and exit
+USAGE
+  RunAs=`echo "$0" | sed -nE 's/(.*)(demosetup)$/\2/p'`
+  if [ "$RunAs" == "demosetup" ]; then
+    exit 0  # Exit if run as itself
+  else
+    unset RunAs
+    return  # Return if run indirectly (ie sourced)
+  fi
+elif [ "$1" == "-c" -o "$1" == "--clear" ]; then  # FIXME: Completely cleaning up again is a non-goal, so maybe better not have the option at all?
+  unset MakeDemoDir
+  echo "Cleared"
+  return
+fi
+
+MakeDemoDir=$1
+export MakeDemoDir
+
+complete -C "$MakeDemoDir/compmake" make
+
+alias n="source $MakeDemoDir/makenext"
+alias b="n -b"
+alias bb="b 1"
+alias bbb="b 2"
+# alias help
+
+alias list="make list"
+alias seq="cat sequence.tmp.mk"
+###

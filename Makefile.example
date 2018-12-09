@@ -1,0 +1,15 @@
+# Example Makefile
+
+default: list  #M Target to run if none is specified
+
+# Requires https://github.com/inventhouse/MakeDemo
+# source demosetup "."
+include $(MakeDemoDir)/MakeDemo.make
+ChunkFile := "chunks.txt"
+
+## Example target ##
+hello:  ## Say hello
+	@echo "Hello demo!"
+
+include sequence.tmp.mk
+# # #

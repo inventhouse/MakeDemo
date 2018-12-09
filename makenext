@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Invoke 'make' with a sequence of numbered targets for demoing
+# Copyright (c) 2018 Benjamin Holt -- MIT License
+
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
+  cat <<USAGE
+usage:
+source makenext [N]            Calls make with sequentially numbered targets,
+                               must be sourced to keep its place
+source makenext -b|--back [M]  Jump back M targets; defaults to 0, repeating
+                               the most recent (does not validate this)
+source makenext -c|--clear     Clears the MakeNext env variable and returns
+       makenext -h|--help      Print this message and exit
+USAGE
+  RunAs=`echo "$0" | sed -nE 's/(.*)(makenext)$/\2/p'`
+  if [ "$RunAs" == "makenext" ]; then
+    exit 0  # Exit if run as itself
+  else
+    unset RunAs
+    return  # Return if run indirectly (ie sourced)
+  fi
+elif [ "$1" == "-b" -o "$1" == "--back" ]; then
+  MakeNextPrev=$((${MakeNext:-2} - $((${2:-0} + 1))))
+elif [ "$1" == "-c" -o "$1" == "--clear" ]; then
+  unset MakeNext
+  echo "Cleared"
+  return 0
+fi
+
+MakeNext=${MakeNextPrev:-${1:-${MakeNext:-"1"}}}
+unset MakeNextPrev  # Sourcing makes this stick around, but doesn't show in env
+make $MakeNext
+MakeNext=$(($MakeNext + 1))
+UpNext=`egrep "^$MakeNext:" ${MakeNextSeq:-"sequence.tmp.mk"}`
+echo "	(Next up $UpNext)"
+unset UpNext
+export MakeNext
+
+###

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Extract chunks of text from a file
+# Copyright (c) 2018 Benjamin Holt -- MIT License
+
+: ${GetChunkDelim:="###"}
+
+if [ "$1" == "-h" -o "$1" == "--help" -o -z "$1" -o -z "$2" ]; then
+  cat <<USAGE
+usage:
+getchunk FILE NAME    Prints the lines between "${GetChunkDelim} NAME" and the
+                      next ${GetChunkDelim} line
+                      Set the env var GetChunkDelim to change the delimiter
+getchunk -h|--help    Print this message and exit
+USAGE
+  exit 0
+fi
+
+cat "$1" | sed -e"1,/^${GetChunkDelim}[ 	][ 	]*$2/ d" -e"/^${GetChunkDelim}/,$ d"
+
+###
