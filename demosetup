@@ -3,16 +3,17 @@
 # Set up aliases and such for doing a presentation with MakeDemo
 # Copyright (c) 2018 Benjamin Holt -- MIT License
 
+RunAs=`echo "$0" | sed -nE 's/(.*)(demosetup)$/\2/p'`
+
 if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ]; then
   cat <<USAGE
 usage:
-source demosetup DIR          Set env vars and aliases based on DIR for
-                              presenting with MakeDemo  Must be sourced for the
-                              setup to stick
+source demosetup DIR          Set env vars and aliases based on DIR to set up
+                              your terminal for presenting with MakeDemo. Must
+                              be sourced for the setup to stick
 source demosetup -c|--clear   Clears the MakeDemoDir env variable and returns
        demosetup [-h|--help]  Print this message and exit
 USAGE
-  RunAs=`echo "$0" | sed -nE 's/(.*)(demosetup)$/\2/p'`
   if [ "$RunAs" == "demosetup" ]; then
     exit 0  # Exit if run as itself
   else
@@ -25,10 +26,18 @@ elif [ "$1" == "-c" -o "$1" == "--clear" ]; then  # FIXME: Completely cleaning u
   return
 fi
 
+if [ "$RunAs" == "demosetup" ]; then
+  echo "Must be run with 'source' for the setup to stick"
+  exit 1  # Not useful when run as itself
+fi
+unset RunAs
+
 MakeDemoDir=$1
 export MakeDemoDir
+echo "Updated environment"
 
 complete -C "$MakeDemoDir/compmake" make
+echo "Added make target tab-completion"
 
 alias n="source $MakeDemoDir/makenext"
 alias b="n -b"
@@ -38,4 +47,10 @@ alias bbb="b 2"
 
 alias list="make list"
 alias seq="cat sequence.tmp.mk"
+echo "Added aliases"
+
+# Force sequence file to update
+touch -t "200001010000" "sequence.tmp.mk"
+make sequence | grep "Refreshed"
+
 ###

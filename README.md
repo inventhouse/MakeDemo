@@ -2,6 +2,7 @@ MakeDemo
 ========
 PowerPoint, Keynote, Slides, there are many presentation apps available, but none are very good for command-line and code-heavy demos; MakeDemo aims to support these.
 
+_((Goals: no nervous fingers - don't type in front of people; present sequentially and show up-next; all setup to prep / pre-demo; ...but enable easy on-the-fly random access))_
 How it works
 ------------
 
