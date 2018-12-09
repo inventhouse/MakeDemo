@@ -1,7 +1,15 @@
 MakeDemo Meta-Demo
 ==================
 
-_((set up for meta-demo with `../demoinit` and `source ./demonow`))_
+This is a short presentation about MakeDemo, showing some of the techniques that would be useful in a real presentation; so run through it and read the source code to see how it's done.
+
+To run it, first initialize it with:
+> `$ ../demoinit`
+
+And set up the environment:
+> `$ source ./demonow`
+
+Then run the `n` alias repeatedly to step through; when it runs out of targets, run `n -c`
 
 ### Intro -- What & why of MakeDemo
 MakeDemo is a framework for command-line demos

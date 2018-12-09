@@ -11,7 +11,8 @@
 default: list  #M Target to run if none is specified
 
 # Requires https://github.com/inventhouse/MakeDemo
-# source ../demosetup ".."
+# $ ../demoinit
+# $ source ./demonow
 include $(MakeDemoDir)/MakeDemo.make
 
 ChunkFile := "README.md"
