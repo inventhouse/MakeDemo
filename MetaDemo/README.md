@@ -1,6 +1,8 @@
 MakeDemo Meta-Demo
 ==================
 
+_((set up for meta-demo with `../demoinit` and `source ./demonow`))_
+
 ### Intro -- What & why of MakeDemo
 MakeDemo is a framework for command-line demos
 - `Makefile` with named targets
@@ -8,6 +10,7 @@ MakeDemo is a framework for command-line demos
 - `makenext` script to step
 - Text "chunks" - code snippets, "slides", complex commands...
 - Pasteboard helpers for macOS (does Linux have this?)
+- Convenience aliases and make target tab-completion
 
 ### Makenext -- What it does
 - Runs (documented) targets in order
@@ -16,6 +19,11 @@ MakeDemo is a framework for command-line demos
 - Quick access to numbered target
 - Not a replacement for named targets and `make list`
 - Must be `sourced` to keep its place
+- Aliases do that for you:
+  - `n` presents the next target, `n N` jumps *to* target N
+  - `b` repeats the last target, `b M` jumps back M targets
+  - `bb` and `bbb` are aliases for `b 1` and `b 2`
+  - `n -c` resets the presentation place (does *not* `make clean`)
 
 ### Make magic -- Special sauce
 MakeDemo.make has a number of helpful things to import and use in your demos
