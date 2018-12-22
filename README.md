@@ -7,6 +7,10 @@ _((Goals: no nervous fingers - don't type in front of people; present sequential
 How it works
 ------------
 
+### Getting started
+
+_((Write this))_
+
 ### Usage
 
 _((Write this))_

@@ -76,6 +76,8 @@ Outline
 - Why make?
 - Chunks
 - Copy-paste
+  - QuietCopy vs. PrintCopy (and why they're var aliases)
 
 - Appendix - Tips & tricks
+  - Multiple chunk files
 ---
