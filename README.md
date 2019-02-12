@@ -30,6 +30,8 @@ To Do
 - Pattern to strip trailing \n?  If chunk ends with '\' can sed s/\\\n//?  or just good ol' tr -d \n and just use it for things that ought to be one line anyway?
 - Pattern for "run in new Terminal"
 
+- Bug: getchunk doesn't find chunk if it starts on the first line of the file
+
 ### Doneyard
 - DONE: include meta targets
 - DONE: include seq aliases
