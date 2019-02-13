@@ -21,7 +21,7 @@ AtChunk = @$(ChunkNamed) "$@"
 
 ###  Meta-targets  ###
 list:          #M Lists the documented targets
-	@egrep "^(\w(\w|[\\ .-])*:[^#]*\s+)?## " Makefile || :
+	@egrep "^(\w(\w|[\\ .-])*:[^#]*\s+)?## " Makefile | sed -e 's/:.*##/:	##/' || :
 
 list_meta:     #M Lists the meta-targets
 	@egrep --no-filename "^\w(\w|[\\ .-])*:[^#]*\s+#M " Makefile "$(MakeDemoDir)/MakeDemo.make" || :
