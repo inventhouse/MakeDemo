@@ -1,0 +1,9 @@
+#!/bin/bash
+
+File="$1"
+Pattern="$2"
+Line=`cat -n "$File" | grep "$Pattern" | tr '\t' ' ' | sed -e 's/^  *//' | cut -d " " -f 1`
+
+atom "$File:$Line"
+
+###
